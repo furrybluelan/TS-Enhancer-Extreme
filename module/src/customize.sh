@@ -139,10 +139,54 @@ source "$TMPDIR/verify.sh"
 [ "$BOOTMODE" ] || {
   ui_print "***********************************************"
   print_cn "! 不受支持的安装环境 Recovery"
-  print_cn "! 请从 Magisk 或 KernelSU 应用安装"
+  print_cn "! 请从 Magisk ， KernelSU 或 Apatch 应用安装"
   print_en "! Install from recovery is not supported"
-  print_en "! Please install from KernelSU or Magisk app"
+  print_en "! Please install from KernelSU, Apatch or Magisk app"
   abort "***********************************************"
+}
+[ "$KSU" ] || {
+    print_cn "- 从 KernelSU 应用中安装"
+    print_cn "- KernelSU 版本：$KSU_VER"
+    print_cn "- KernelSU 版本号：$KSU_KERNEL_VER_CODE (kernel) + $KSU_VER_CODE (ksud)"
+    print_en "- Installing from KernelSU app"
+    print_en "- KernelSU version：$KSU_VER"
+    print_en "- KernelSU version code：$KSU_KERNEL_VER_CODE (kernel) + $KSU_VER_CODE (ksud)"
+    if [ "$(which magisk)" ]; then
+        ui_print "*********************************************************"
+        print_cn "! 多种 root 实现是不受支持的"
+        print_cn "! 请在安装模块#TS-Enhancer-Extreme前卸载 Magisk"
+        print_en "! Multiple root implementation is NOT supported!"
+        print_en "! Please uninstall Magisk before installing #TS-Enhancer-Extreme"
+        abort    "*********************************************************"
+    fi
+    if [ "$KSU_KERNEL_VER_CODE" -ne "$KSU_VER_CODE" ] ; then
+        ui_print "---------------------------------------------------------"
+        print_cn"- ! kerne 与 ksud 版本是不同的。这不是个好习惯"
+        print_cn "- ! 请尽可能保持它们相同"
+        print_cn "- ! 否则，你可能遇到不可预料的问题"
+        print_en"- ! The kernel version and ksud version are not the same.It's not a good habit"
+        print_en "- ! Please keep them as same as possible"
+        print_en "- ! Otherwise, you might encounter unexpected problems"
+        ui_print "---------------------------------------------------------"
+    fi
+    if [ "$KSU_KERNEL_VER_CODE" -ge 20000 ]; then
+        ui_print "*********************************************************"
+        print_cn "! KernelSU 版本异常!"
+        print_cn "! 请将 KernelSU 集成到你的内核"
+        print_cn "  作为一个子模块而不是直接复制源代码"
+        print_en "! KernelSU version abnormal!"
+        print_en "! Please integrate KernelSU into your kernel"
+        print_en "  as submodule instead of copying the source code"
+        abort    "*********************************************************"
+    fi
+}
+[ "$APATCH" ] || {
+    print_cn "- 从 Apatch 应用安装"
+    print_cn "- Apatch 版本：$APATCH_VER"
+    print_cn "- Apatch 版本号：$APATCH_VER_CODE"
+    print_en "- Installing from Apatch app"
+    print_en "- Apatch version：$APATCH_VER"
+    print_en "- Apatch version code：$APATCH_VER_CODE"
 }
 [ "$RELEASE" -lt $MIN_RELEASE ] && {
   ui_print "***********************************************"
